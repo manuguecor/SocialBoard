@@ -1,3 +1,18 @@
+"use client"
+import { testFirestore } from "@/lib/testFirestore"
 export default function Home() {
-  return <h1 className="text-3xl font-bold">Hola TFM</h1>
+  const handleClick = async () => {
+    await testFirestore()
+  }
+
+  return (
+    <div className="p-4">
+      <h1>Test Firebase</h1>
+      <button
+        onClick={handleClick}
+        className="bg-black text-white p-2 mt-4">
+        Probar Firestore
+      </button>
+    </div>
+  )
 }
