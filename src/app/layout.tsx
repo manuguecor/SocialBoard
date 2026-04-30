@@ -1,12 +1,15 @@
-import Navbar from "@/components/Navbar";
-import "./globals.css";
+"use client"
+
+import { useAuthListener } from "@/features/auth/hooks/useAuthListener"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  
+  useAuthListener()
+
   return (
     <html lang="es">
       <body>
-        <Navbar/>
-        <main className="p-4">{children}</main>
+        <main>{children}</main>
       </body>
     </html>
   )
