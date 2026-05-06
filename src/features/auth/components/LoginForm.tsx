@@ -3,11 +3,13 @@
 import { useState } from "react"
 import { loginUser } from "../services/login"
 import { useAuthStore } from "@/store/authStore"
+import { useRouter } from "next/navigation"
 
 export default function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const setUser = useAuthStore((state) => state.setUser)
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -16,6 +18,7 @@ export default function LoginForm() {
       const user = await loginUser(email, password)
       setUser(user)
       alert("Login correcto")
+      router.push("/posts")
     } catch (error: any) {
       alert(error.message)
     }
