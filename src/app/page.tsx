@@ -1,18 +1,26 @@
-"use client"
-import { testFirestore } from "@/lib/testFirestore"
-export default function Home() {
-  const handleClick = async () => {
-    await testFirestore()
-  }
+import PostList from "@/features/posts/components/PostList";
 
+export default function HomePage() {
   return (
-    <div className="p-4">
-      <h1>Test Firebase</h1>
-      <button
-        onClick={handleClick}
-        className="bg-black text-white p-2 mt-4">
-        Probar Firestore
-      </button>
+    <div className="space-y-10">
+      
+      <section className="bg-white rounded-2xl p-10 shadow-sm text-center">
+        <h1 className="text-5xl font-bold mb-4">
+          SocialBoard
+        </h1>
+
+        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          Plataforma social para crear, compartir y analizar
+          jugadas tácticas de fútbol.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-2xl font-semibold mb-4">
+          Últimas publicaciones
+        </h2>
+        <PostList />
+      </section>
     </div>
   )
 }

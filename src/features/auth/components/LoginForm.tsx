@@ -4,6 +4,9 @@ import { useState } from "react"
 import { loginUser } from "../services/login"
 import { useAuthStore } from "@/store/authStore"
 import { useRouter } from "next/navigation"
+import Card from "@/components/ui/Card"
+import Input from "@/components/ui/Input"
+import Button from "@/components/ui/Button"
 
 export default function LoginForm() {
   const [email, setEmail] = useState("")
@@ -25,26 +28,43 @@ export default function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-      <input
-        type="email"
-        placeholder="Email"
-        className="border p-2"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+    <div className="max-w-md mx-auto mt-10">
+      <Card>
+        <h1 className="text-3xl font-bold mb-2">
+          Iniciar sesión
+        </h1>
 
-      <input
-        type="password"
-        placeholder="Password"
-        className="border p-2"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <p className="text-gray-500 mb-6">
+          Acceda con sus credenciales a SocialBoard
+        </p>
 
-      <button className="bg-black text-white p-2">
-        Iniciar sesión
-      </button>
-    </form>
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+          />
+
+          <Input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+          />
+
+          <Button className="w-full">
+            Iniciar sesión
+          </Button>
+        </form>
+      </Card>
+    </div>
   )
 }
