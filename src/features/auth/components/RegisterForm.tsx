@@ -3,6 +3,9 @@
 import { useState } from "react"
 import { registerUser } from "../services/register"
 import { useRouter } from "next/navigation"
+import Card from "@/components/ui/Card"
+import Input from "@/components/ui/Input"
+import Button from "@/components/ui/Button"
 
 export default function RegisterForm() {
   const [email, setEmail] = useState("")
@@ -22,26 +25,43 @@ export default function RegisterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-      <input
-        type="email"
-        placeholder="Email"
-        className="border p-2"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+    <div className="max-w-md mx-auto mt-10">
+      <Card>
+        <h1 className="text-3xl font-bold mb-2">
+          Crear cuenta
+        </h1>
 
-      <input
-        type="password"
-        placeholder="Password"
-        className="border p-2"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <p className="text-gray-500 mb-6">
+          Regístrese para comenzar a usar SocialBoard
+        </p>
 
-      <button className="bg-black text-white p-2">
-        Registrarse
-      </button>
-    </form>
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+          />
+
+          <Input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+          />
+
+          <Button className="w-full">
+            Registrarse
+          </Button>
+        </form>
+      </Card>
+    </div>
   )
 }

@@ -3,6 +3,9 @@
 import { useState } from "react"
 import { createPost } from "../services/createPost"
 import { useAuthStore } from "@/store/authStore"
+import Button from "@/components/ui/Button"
+import Input from "@/components/ui/Input"
+import Card from "@/components/ui/Card"
 
 export default function PostForm() {
   const [title, setTitle] = useState("")
@@ -26,24 +29,32 @@ export default function PostForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-      <input
-        placeholder="Título"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="border p-2"
-      />
-
-      <textarea
-        placeholder="Contenido"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        className="border p-2"
-      />
-
-      <button className="bg-black text-white p-2">
+    <Card>
+      <h2 className="text-2xl font-semibold mb-6">
         Crear publicación
-      </button>
-    </form>
+      </h2>
+
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4"
+      >
+        <Input
+          placeholder="Título"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+
+        <textarea
+          placeholder="Contenido"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="w-full min-h-[120px] border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black resize-none"
+        />
+
+        <Button className="w-full">
+          Crear publicación
+        </Button>
+      </form>
+    </Card>
   )
 }

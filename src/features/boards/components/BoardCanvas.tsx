@@ -1,118 +1,199 @@
 "use client"
 
-import { Stage, Layer, Circle, Rect } from "react-konva"
+import { Stage, Layer, Circle } from "react-konva"
 import { useEffect, useState } from "react"
+
 import { saveBoard } from "../services/saveBoard"
+
 import { useAuthStore } from "@/store/authStore"
+
+import Card from "@/components/ui/Card"
+import Button from "@/components/ui/Button"
 
 type ElementType = {
   id: number
   type: "player" | "ball"
+  team?: "blue" | "red"
   x: number
   y: number
 }
 
-export default function BoardCanvas({ externalBoard }: any) {
-    const [elements, setElements] = useState<ElementType[]>([])
+export default function BoardCanvas({
+  externalBoard,
+}: any) {
+  const [elements, setElements] = useState<
+    ElementType[]
+  >([])
 
-    useEffect(() => {
+  const user = useAuthStore(
+    (state) => state.user
+  )
+
+  useEffect(() => {
     if (externalBoard) {
-        setElements(externalBoard.elements)
+      setElements(externalBoard.elements)
     }
-    }, [externalBoard])
+  }, [externalBoard])
 
-    const addPlayer = () => {
-        setElements((prev) => [
-        ...prev,
-        {
-            id: Date.now(),
-            type: "player",
-            x: 100,
-            y: 100,
-        },
-        ])
-    }
+  const addBluePlayer = () => {
+    setElements((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        type: "player",
+        team: "blue",
+        x: 180 + Math.random() * 120,
+        y: 100 + Math.random() * 300,
+      },
+    ])
+  }
 
-    const addBall = () => {
-        const exists = elements.find((el) => el.type === "ball")
-        if (exists) {
-            return alert("Ya hay un balón")
-        } else {
-            setElements((prev) => [
-            ...prev,
-            {
-                id: Date.now(),
-                type: "ball",
-                x: 200,
-                y: 200,
-            },
-            ])
-        }
-    }
+  const addRedPlayer = () => {
+    setElements((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        type: "player",
+        team: "red",
+        x: 500 + Math.random() * 120,
+        y: 100 + Math.random() * 300,
+      },
+    ])
+  }
 
-    const handleDrag = (id: number, x: number, y: number) => {
-        setElements((prev) =>
-        prev.map((el) => (el.id === id ? { ...el, x, y } : el))
-        )
-    }
+  const addBall = () => {
+    const exists = elements.find(
+      (el) => el.type === "ball"
+    )
 
-    const user = useAuthStore((state) => state.user)
-
-    const handleSave = async () => {
-    if (!user) return alert("Debes estar logueado")
-
-        await saveBoard({
-            userId: user.uid,
-            elements,
-        })
-
-        alert("Pizarra guardada")
+    if (exists) {
+      return alert("Ya hay un balón")
     }
 
-    const loadBoard = (board: any) => {
-        setElements(board.elements)
+    setElements((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        type: "ball",
+        x: 400,
+        y: 250,
+      },
+    ])
+  }
+
+  const handleDrag = (
+    id: number,
+    x: number,
+    y: number
+  ) => {
+    setElements((prev) =>
+      prev.map((el) =>
+        el.id === id
+          ? { ...el, x, y }
+          : el
+      )
+    )
+  }
+
+  const handleSave = async () => {
+    if (!user) {
+      return alert(
+        "Debes estar logueado"
+      )
     }
 
-    return (
+    await saveBoard({
+      userId: user.uid,
+      elements,
+    })
+
+    alert("Pizarra guardada")
+  }
+
+  return (
+    <Card>
+      <div className="flex items-center justify-between mb-6">
         <div>
-        {/* Controles */}
-        <div className="mb-4">
-            <button onClick={addPlayer} className="mr-2 border p-2">
-            + Jugador
-            </button>
+          <h2 className="text-2xl font-semibold">
+            Pizarra táctica
+          </h2>
 
-            <button onClick={addBall} className="border p-2">
-            + Balón
-            </button>
+          <p className="text-gray-500 text-sm">
+            Crea y organiza jugadas tácticas
+          </p>
         </div>
+      </div>
 
-        <Stage width={800} height={500}>
-            <Layer>
-            {/* Campo */}
-            <Rect width={800} height={500} fill="#0a7f3f" />
+      <div className="flex flex-wrap gap-3 mb-6">
+        <Button
+          onClick={addBluePlayer}
+          className="bg-blue-600"
+        >
+          + Equipo Azul
+        </Button>
 
-            {/* Elementos */}
+        <Button
+          onClick={addRedPlayer}
+          className="bg-red-600"
+        >
+          + Equipo Rojo
+        </Button>
+
+        <Button
+          onClick={addBall}
+        >
+          + Balón
+        </Button>
+      </div>
+
+      <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-sm">
+        <Stage
+          width={800}
+          height={500}
+          className="bg-green-700"
+        >
+          <Layer>
+
             {elements.map((el) => (
-                <Circle
+              <Circle
                 key={el.id}
                 x={el.x}
                 y={el.y}
-                radius={el.type === "player" ? 15 : 8}
-                fill={el.type === "player" ? "blue" : "white"}
+                radius={
+                  el.type === "player"
+                    ? 18
+                    : 10
+                }
+                fill={
+                  el.type === "ball"
+                    ? "#ffffff"
+                    : el.team === "blue"
+                    ? "#2563eb"
+                    : "#dc2626"
+                }
+                stroke="#ffffff"
+                strokeWidth={2}
+                shadowBlur={5}
                 draggable
                 onDragEnd={(e) =>
-                    handleDrag(el.id, e.target.x(), e.target.y())
+                  handleDrag(
+                    el.id,
+                    e.target.x(),
+                    e.target.y()
+                  )
                 }
-                />
+              />
             ))}
-            </Layer>
-        </Stage>
 
-        <div className="mb-4">
-            <button onClick={handleSave} className="mr-2 border p-2">
-                Guardar pizarra
-            </button>
-        </div>
-        </div>
-    )
+          </Layer>
+        </Stage>
+      </div>
+
+      <div className="mt-6 flex justify-end">
+        <Button onClick={handleSave}>
+          Guardar pizarra
+        </Button>
+      </div>
+    </Card>
+  )
 }
