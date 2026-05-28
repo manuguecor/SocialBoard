@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { getPosts } from "../services/getPosts"
 import Card from "@/components/ui/Card"
+import Link from "next/link"
 
 export default function PostList() {
   const [posts, setPosts] = useState<any[]>([])
@@ -38,11 +39,11 @@ export default function PostList() {
           </p>
 
           <div className="mt-5 flex justify-end">
-            <button
-              className="text-sm font-medium text-black hover:underline"
-            >
-              Ver publicación
-            </button>
+            <Link href={`/posts/${post.id}`}>
+              <button className="text-sm font-medium text-black hover:underline">
+                Ver publicación
+              </button>
+            </Link>
           </div>
         </Card>
       ))}
