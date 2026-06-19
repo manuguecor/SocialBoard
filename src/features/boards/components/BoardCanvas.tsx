@@ -1,199 +1,169 @@
 "use client"
 
-import { Stage, Layer, Circle } from "react-konva"
 import { useEffect, useState } from "react"
+
+import Card from "@/components/ui/Card"
+import { useAuthStore } from "@/store/authStore"
 
 import { saveBoard } from "../services/saveBoard"
 
-import { useAuthStore } from "@/store/authStore"
+import BoardHeader from "./BoardHeader"
+import BoardToolbar from "./BoardToolbar"
+import BoardStage from "./BoardStage"
+import BoardFooter from "./BoardFooter"
 
-import Card from "@/components/ui/Card"
-import Button from "@/components/ui/Button"
+import { ToolType } from "../types/ToolType"
+import { BoardElement } from "../types/BoardElement"
 
-type ElementType = {
-  id: number
-  type: "player" | "ball"
-  team?: "blue" | "red"
-  x: number
-  y: number
+type Props = {
+  externalBoard?: any
+  onBack: () => void
 }
 
 export default function BoardCanvas({
   externalBoard,
-}: any) {
-  const [elements, setElements] = useState<
-    ElementType[]
-  >([])
-
+  onBack,
+}: Props) {
   const user = useAuthStore(
     (state) => state.user
   )
 
+  const [elements, setElements] = useState<
+    BoardElement[]
+  >([])
+
+  const [boardId, setBoardId] =
+    useState<string | null>(null)
+
+  const [boardName, setBoardName] =
+    useState("")
+
+  const [boardType, setBoardType] =
+    useState<"full" | "half" | "area">(
+      "full"
+    )
+
+  const [selectedId, setSelectedId] =
+    useState<number | null>(null)
+
+  const [tool, setTool] =
+    useState<ToolType>("select")
+
   useEffect(() => {
-    if (externalBoard) {
-      setElements(externalBoard.elements)
+    if (!externalBoard) {
+      setElements([])
+      setBoardId(null)
+      setBoardName("")
+      setBoardType("full")
+      setSelectedId(null)
+      setTool("select")
+      return
     }
+
+    setBoardId(externalBoard.id)
+
+    setBoardName(
+      externalBoard.name || ""
+    )
+
+    setBoardType(
+      externalBoard.boardType || "full"
+    )
+
+    setElements(
+      externalBoard.elements || []
+    )
+
+    setSelectedId(null)
+
+    setTool("select")
   }, [externalBoard])
-
-  const addBluePlayer = () => {
-    setElements((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        type: "player",
-        team: "blue",
-        x: 180 + Math.random() * 120,
-        y: 100 + Math.random() * 300,
-      },
-    ])
-  }
-
-  const addRedPlayer = () => {
-    setElements((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        type: "player",
-        team: "red",
-        x: 500 + Math.random() * 120,
-        y: 100 + Math.random() * 300,
-      },
-    ])
-  }
-
-  const addBall = () => {
-    const exists = elements.find(
-      (el) => el.type === "ball"
-    )
-
-    if (exists) {
-      return alert("Ya hay un balón")
-    }
-
-    setElements((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        type: "ball",
-        x: 400,
-        y: 250,
-      },
-    ])
-  }
-
-  const handleDrag = (
-    id: number,
-    x: number,
-    y: number
-  ) => {
-    setElements((prev) =>
-      prev.map((el) =>
-        el.id === id
-          ? { ...el, x, y }
-          : el
-      )
-    )
-  }
 
   const handleSave = async () => {
     if (!user) {
       return alert(
-        "Debes estar logueado"
+        "Debes iniciar sesión."
+      )
+    }
+
+    if (!boardName.trim()) {
+      return alert(
+        "Introduce un nombre para la pizarra."
       )
     }
 
     await saveBoard({
+      id: boardId,
       userId: user.uid,
+      name: boardName,
+      boardType,
       elements,
     })
 
-    alert("Pizarra guardada")
+    onBack()
+  }
+
+  const deleteSelected = () => {
+    if (!selectedId) return
+
+    setElements((prev) =>
+      prev.filter(
+        (el) => el.id !== selectedId
+      )
+    )
+
+    setSelectedId(null)
+  }
+
+  const clearBoard = () => {
+    setElements([])
+    setSelectedId(null)
   }
 
   return (
     <Card>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-2xl font-semibold">
-            Pizarra táctica
-          </h2>
 
-          <p className="text-gray-500 text-sm">
-            Crea y organiza jugadas tácticas
-          </p>
+      <BoardHeader
+        boardId={boardId}
+        boardName={boardName}
+        setBoardName={setBoardName}
+        boardType={boardType}
+        setBoardType={setBoardType}
+        onBack={onBack}
+      />
+
+      <div className="flex gap-6 items-start">
+
+        <BoardToolbar
+          tool={tool}
+          onChange={setTool}
+        />
+
+        <div className="flex-1">
+
+          <BoardStage
+            boardType={boardType}
+            tool={tool}
+            elements={elements}
+            selectedId={selectedId}
+            setSelectedId={setSelectedId}
+            setElements={setElements}
+          />
+
         </div>
+
       </div>
 
-      <div className="flex flex-wrap gap-3 mb-6">
-        <Button
-          onClick={addBluePlayer}
-          className="bg-blue-600"
-        >
-          + Equipo Azul
-        </Button>
+      <BoardFooter
+        boardId={boardId}
+        selectedId={selectedId}
+        onDeleteSelected={
+          deleteSelected
+        }
+        onClear={clearBoard}
+        onSave={handleSave}
+      />
 
-        <Button
-          onClick={addRedPlayer}
-          className="bg-red-600"
-        >
-          + Equipo Rojo
-        </Button>
-
-        <Button
-          onClick={addBall}
-        >
-          + Balón
-        </Button>
-      </div>
-
-      <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-sm">
-        <Stage
-          width={800}
-          height={500}
-          className="bg-green-700"
-        >
-          <Layer>
-
-            {elements.map((el) => (
-              <Circle
-                key={el.id}
-                x={el.x}
-                y={el.y}
-                radius={
-                  el.type === "player"
-                    ? 18
-                    : 10
-                }
-                fill={
-                  el.type === "ball"
-                    ? "#ffffff"
-                    : el.team === "blue"
-                    ? "#2563eb"
-                    : "#dc2626"
-                }
-                stroke="#ffffff"
-                strokeWidth={2}
-                shadowBlur={5}
-                draggable
-                onDragEnd={(e) =>
-                  handleDrag(
-                    el.id,
-                    e.target.x(),
-                    e.target.y()
-                  )
-                }
-              />
-            ))}
-
-          </Layer>
-        </Stage>
-      </div>
-
-      <div className="mt-6 flex justify-end">
-        <Button onClick={handleSave}>
-          Guardar pizarra
-        </Button>
-      </div>
     </Card>
   )
 }

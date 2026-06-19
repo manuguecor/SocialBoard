@@ -93,15 +93,15 @@ export default function CommentsSidebar({
                 {comment.content}
               </p>
 
-              <button onClick={() => setReplyingTo(comment.id)} className="text-sm text-blue-600 mt-2 hover:underline">
+              <Button onClick={() => setReplyingTo(comment.id)} variant="secondary">
                 Responder
-              </button>
+              </Button>
 
               {replyingTo === comment.id && (
                 <div className="mt-3 space-y-2">
                   <Input placeholder="Escribe una respuesta..." value={content} onChange={(e: any) => setContent(e.target.value)}/>
 
-                  <Button className="w-full" onClick={() => handleComment(comment.id)}>
+                  <Button fullWidth onClick={() => handleComment(comment.id)}>
                     Publicar respuesta
                   </Button>
                 </div>
@@ -132,7 +132,7 @@ export default function CommentsSidebar({
 
           <Input placeholder="Escribe un comentario..." value={content} onChange={(e: any) => setContent(e.target.value)}/>
 
-          <Button className="w-full" onClick={() => handleComment()}>
+          <Button fullWidth onClick={() => handleComment()}>
             Publicar comentario
           </Button>
 

@@ -1,7 +1,22 @@
-"use client"
-
 import "./globals.css"
-import Navbar from "@/components/Navbar"
+import { Inter, Montserrat } from "next/font/google";
+import Navbar from "@/components/Navbar";
+import { Metadata } from "next";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+});
+
+export const metadata: Metadata = {
+  title: "SocialBoard",
+  description: "Plataforma social para análisis táctico deportivo",
+};
 
 export default function RootLayout({
   children,
@@ -9,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" className={`${inter.variable} ${montserrat.variable}`}>
       <body className="bg-gray-100 text-gray-900 min-h-screen">
         <Navbar />
 

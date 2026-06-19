@@ -6,6 +6,7 @@ import { useAuthStore } from "@/store/authStore"
 import Button from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import Card from "@/components/ui/Card"
+import TextArea from "@/components/ui/TextArea"
 
 export default function PostForm() {
   const [title, setTitle] = useState("")
@@ -44,14 +45,13 @@ export default function PostForm() {
           onChange={(e) => setTitle(e.target.value)}
         />
 
-        <textarea
+        <TextArea
           placeholder="Contenido"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full min-h-[120px] border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black resize-none"
         />
 
-        <Button className="w-full">
+        <Button fullWidth>
           Crear publicación
         </Button>
       </form>

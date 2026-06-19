@@ -7,10 +7,37 @@ import { useState } from "react"
 export default function BoardsPage() {
   const [selectedBoard, setSelectedBoard] = useState(null)
 
+  const [editing, setEditing] = useState(false)
+
   return (
     <div className="p-4">
-      <BoardCanvas externalBoard={selectedBoard} />
-      <BoardList onSelect={setSelectedBoard} />
+
+      {editing ? (
+
+        <BoardCanvas
+          externalBoard={selectedBoard}
+          onBack={() => {
+            setEditing(false)
+            setSelectedBoard(null)
+          }}
+        />
+
+      ) : (
+
+        <BoardList
+          onCreate={() => {
+            setSelectedBoard(null)
+            setEditing(true)
+          }}
+
+          onSelect={(board) => {
+            setSelectedBoard(board)
+            setEditing(true)
+          }}
+        />
+
+      )}
+
     </div>
   )
 }

@@ -8,6 +8,7 @@ import { getPostById } from "../services/getPostById"
 
 import CommentsSidebar from "./CommentsSidebar"
 import Link from "next/link"
+import Button from "@/components/ui/Button"
 
 export default function PostDetail({
   postId,
@@ -41,9 +42,9 @@ export default function PostDetail({
         <Card>
 
             <Link href={`/posts`}>
-                <button className="text-sm text-gray-500 mb-6 hover:underline">
+                <Button variant="secondary">
                 ← Volver
-                </button>
+                </Button>
             </Link>
 
             <div className="mb-6">
