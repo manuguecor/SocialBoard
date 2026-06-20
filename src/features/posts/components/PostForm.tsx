@@ -1,16 +1,31 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { createPost } from "../services/createPost"
 import { useAuthStore } from "@/store/authStore"
 import Button from "@/components/ui/Button"
 import Input from "@/components/ui/Input"
 import Card from "@/components/ui/Card"
+import TextArea from "@/components/ui/TextArea"
+import { getBoards } from "@/features/boards/services/getBoards"
 
 export default function PostForm() {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
+  const [boards, setBoards] = useState<any[]>([])
+  const [boardId, setBoardId] = useState("")
   const user = useAuthStore((state) => state.user)
+
+  useEffect(() => {
+    if (!user) return
+
+    const loadBoards = async () => {
+      const data = await getBoards(user.uid)
+      setBoards(data)
+    }
+
+    loadBoards()
+  }, [user])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,10 +37,12 @@ export default function PostForm() {
       content,
       authorId: user.uid,
       authorEmail: user.email,
+      boardId: boardId || null,
     })
 
     setTitle("")
     setContent("")
+    setBoardId("")
   }
 
   return (
@@ -44,14 +61,47 @@ export default function PostForm() {
           onChange={(e) => setTitle(e.target.value)}
         />
 
-        <textarea
+        <TextArea
           placeholder="Contenido"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full min-h-[120px] border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black resize-none"
         />
 
-        <Button className="w-full">
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Pizarra táctica (opcional)
+          </label>
+
+          <select
+            value={boardId}
+            onChange={(e) => setBoardId(e.target.value)}
+            className="
+              w-full
+              rounded-xl
+              border border-[var(--border)]
+              bg-white
+              px-4 py-3
+              focus:outline-none
+              focus:ring-2
+              focus:ring-[var(--primary)]
+            "
+          >
+            <option value="">
+              Ninguna
+            </option>
+
+            {boards.map((board) => (
+              <option
+                key={board.id}
+                value={board.id}
+              >
+                {board.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <Button fullWidth>
           Crear publicación
         </Button>
       </form>

@@ -57,7 +57,7 @@ export default function RegisterForm() {
             }
           />
 
-          <Button className="w-full">
+          <Button fullWidth>
             Registrarse
           </Button>
         </form>

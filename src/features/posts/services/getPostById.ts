@@ -13,6 +13,6 @@ export async function getPostById(id: string) {
 
   return {
     id: snapshot.id,
-    ...snapshot.data(),
+    ...(snapshot.data() as any),
   }
 }

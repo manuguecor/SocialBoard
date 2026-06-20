@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useAuthStore } from "@/store/authStore"
 import { logoutUser } from "@/features/auth/services/logout"
+import Button from "./ui/Button"
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -65,12 +66,12 @@ export default function Navbar() {
                 {user.email}
               </span>
 
-              <button
+              <Button
                 onClick={logoutUser}
-                className="text-red-500 hover:text-red-600"
+                variant="secondary"
               >
                 Cerrar sesión
-              </button>
+              </Button>
             </>
           )}
         </div>

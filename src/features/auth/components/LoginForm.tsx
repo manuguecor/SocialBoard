@@ -60,7 +60,7 @@ export default function LoginForm() {
             }
           />
 
-          <Button className="w-full">
+          <Button fullWidth>
             Iniciar sesión
           </Button>
         </form>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { getPosts } from "../services/getPosts"
 import Card from "@/components/ui/Card"
 import Link from "next/link"
+import Button from "@/components/ui/Button"
 
 export default function PostList() {
   const [posts, setPosts] = useState<any[]>([])
@@ -32,6 +33,13 @@ export default function PostList() {
                 {post.authorEmail}
               </p>
             </div>
+
+            {post.boardId && (
+              <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                ⚽ Pizarra táctica
+              </span>
+            )}
+            
           </div>
 
           <p className="text-gray-700 leading-relaxed line-clamp-3">
@@ -40,9 +48,9 @@ export default function PostList() {
 
           <div className="mt-5 flex justify-end">
             <Link href={`/posts/${post.id}`}>
-              <button className="text-sm font-medium text-black hover:underline">
+              <Button variant="primary">
                 Ver publicación
-              </button>
+              </Button>
             </Link>
           </div>
         </Card>
