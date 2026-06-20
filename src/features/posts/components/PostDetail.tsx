@@ -9,6 +9,8 @@ import { getPostById } from "../services/getPostById"
 import CommentsSidebar from "./CommentsSidebar"
 import Link from "next/link"
 import Button from "@/components/ui/Button"
+import { getBoardById } from "@/features/boards/services/getBoardById"
+import BoardStage from "@/features/boards/components/BoardStage"
 
 export default function PostDetail({
   postId,
@@ -16,12 +18,17 @@ export default function PostDetail({
   postId: string
 }) {
   const [post, setPost] = useState<any>(null)
+  const [board, setBoard] = useState<any>(null)
 
   useEffect(() => {
     const fetchPost = async () => {
       const data = await getPostById(postId)
-
       setPost(data)
+
+      if (data?.boardId) {
+          const boardData = await getBoardById(data.boardId)
+          setBoard(boardData)
+      }
     }
 
     fetchPost()
@@ -62,9 +69,23 @@ export default function PostDetail({
             </div>
 
             <div className="mt-8">
-            <div className="bg-green-700 rounded-2xl h-[400px] flex items-center justify-center text-white">
-                Pizarra táctica
-            </div>
+              {board && (
+                <div className="mt-8">
+                    <h2 className="text-xl font-semibold mb-4">
+                        Pizarra táctica
+                    </h2>
+
+                    <BoardStage
+                        boardType={board.boardType}
+                        elements={board.elements}
+                        tool="select"
+                        selectedId={null}
+                        setSelectedId={() => {}}
+                        setElements={() => {}}
+                        readOnly
+                    />
+                </div>
+              )}
             </div>
 
         </Card>

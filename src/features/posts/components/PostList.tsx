@@ -33,6 +33,13 @@ export default function PostList() {
                 {post.authorEmail}
               </p>
             </div>
+
+            {post.boardId && (
+              <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                ⚽ Pizarra táctica
+              </span>
+            )}
+            
           </div>
 
           <p className="text-gray-700 leading-relaxed line-clamp-3">

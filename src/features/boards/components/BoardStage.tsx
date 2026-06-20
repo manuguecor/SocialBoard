@@ -12,18 +12,14 @@ import { useState } from "react"
 
 type Props = {
     boardType: "full" | "half" | "area"
-
     tool: ToolType
-
     elements: BoardElement[]
-
     selectedId: number | null
-
     setSelectedId: (id: number | null) => void
-
     setElements: React.Dispatch<
         React.SetStateAction<BoardElement[]>
     >
+    readOnly?: boolean
 }
 
 export default function BoardStage({
@@ -33,6 +29,7 @@ export default function BoardStage({
     selectedId,
     setSelectedId,
     setElements,
+    readOnly = false,
 }: Props) {
 
     const [drawingLine, setDrawingLine] = useState<number[] | null>(null)
@@ -216,7 +213,7 @@ export default function BoardStage({
         width={BOARD.WIDTH}
         height={BOARD.HEIGHT}
         className="bg-green-700"
-        onMouseDown={handleStageClick}
+        onMouseDown={readOnly ? undefined: handleStageClick}
       >
 
         <Layer>

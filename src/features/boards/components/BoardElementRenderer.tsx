@@ -8,18 +8,15 @@ import { BOARD } from "../config/BoardConfig"
 
 type Props = {
   element: BoardElement
-
   tool: ToolType
-
   selectedId: number | null
-
   setSelectedId: (id: number | null) => void
-
   onDrag: (
     id: number,
     x: number,
     y: number
-  ) => void
+  ) => void,
+  readOnly?: boolean
 }
 
 export default function BoardElementRenderer({
@@ -28,10 +25,11 @@ export default function BoardElementRenderer({
   selectedId,
   setSelectedId,
   onDrag,
+  readOnly = false
 }: Props) {
 
   const commonProps = {
-    draggable: tool === "select",
+    draggable: !readOnly && tool === "select",
 
     onClick: (e:any) => {
         e.cancelBubble = true
