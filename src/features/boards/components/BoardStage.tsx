@@ -12,6 +12,8 @@ import { useState } from "react"
 
 type Props = {
     boardType: "full" | "half" | "area"
+    width?: number
+    height?: number
     tool: ToolType
     elements: BoardElement[]
     selectedId: number | null
@@ -24,6 +26,8 @@ type Props = {
 
 export default function BoardStage({
     boardType,
+    width,
+    height,
     tool,
     elements,
     selectedId,
@@ -33,8 +37,13 @@ export default function BoardStage({
 }: Props) {
 
     const [drawingLine, setDrawingLine] = useState<number[] | null>(null)
-
     const [drawingArrow, setDrawingArrow] = useState<number[] | null>(null)
+
+    const stageWidth = width ?? BOARD.WIDTH
+    const stageHeight = height ?? BOARD.HEIGHT
+
+    const scaleX = stageWidth / BOARD.WIDTH
+    const scaleY = stageHeight / BOARD.HEIGHT 
 
     const addBluePlayer = (x: number, y: number) => {
         setElements((prev) => [
@@ -210,13 +219,13 @@ export default function BoardStage({
     <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-sm">
 
       <Stage
-        width={BOARD.WIDTH}
-        height={BOARD.HEIGHT}
+        width={stageWidth}
+        height={stageHeight}
         className="bg-green-700"
         onMouseDown={readOnly ? undefined: handleStageClick}
       >
 
-        <Layer>
+        <Layer scaleX={scaleX} scaleY={scaleY}>
 
           <Rect
             x={0}

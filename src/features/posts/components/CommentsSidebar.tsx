@@ -11,6 +11,7 @@ import { useAuthStore } from "@/store/authStore"
 import { createComment } from "@/features/comments/services/createComment"
 
 import { getCommentsByPost } from "@/features/comments/services/getCommentsByPost"
+import Link from "next/link"
 
 export default function CommentsSidebar({
   postId,
@@ -93,9 +94,14 @@ export default function CommentsSidebar({
                 {comment.content}
               </p>
 
-              <Button onClick={() => setReplyingTo(comment.id)} variant="secondary">
-                Responder
-              </Button>
+              {user && (
+                <Button
+                  onClick={() => setReplyingTo(comment.id)}
+                  variant="secondary"
+                >
+                  Responder
+                </Button>
+              )}
 
               {replyingTo === comment.id && (
                 <div className="mt-3 space-y-2">
@@ -128,15 +134,45 @@ export default function CommentsSidebar({
       </div>
 
       {!replyingTo && (
-        <div className="space-y-3">
+        user ? (
 
-          <Input placeholder="Escribe un comentario..." value={content} onChange={(e: any) => setContent(e.target.value)}/>
+          <div className="space-y-3">
 
-          <Button fullWidth onClick={() => handleComment()}>
-            Publicar comentario
-          </Button>
+            <Input
+              placeholder="Escribe un comentario..."
+              value={content}
+              onChange={(e: any) =>
+                setContent(e.target.value)
+              }
+            />
 
-        </div>
+            <Button
+              fullWidth
+              onClick={() => handleComment()}
+            >
+              Publicar comentario
+            </Button>
+
+          </div>
+
+        ) : (
+
+          <Card className="bg-gray-50 border-dashed">
+
+            <p className="text-sm text-gray-500 mb-3">
+              Debes iniciar sesión para comentar.
+            </p>
+
+            <Link href="/login">
+              <Button fullWidth>
+                Iniciar sesión
+              </Button>
+            </Link>
+
+          </Card>
+
+        )
+
       )}
 
     </Card>
