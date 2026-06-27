@@ -48,11 +48,13 @@ export default function PostDetail({
       <div className="col-span-8">
         <Card>
 
-            <Link href={`/posts`}>
+            <div className="mb-6">
+              <Link href="/posts">
                 <Button variant="secondary">
-                ← Volver
+                  ← Volver
                 </Button>
-            </Link>
+              </Link>
+            </div>
 
             <div className="mb-6">
             <p className="text-sm text-gray-500 mb-2">
@@ -75,7 +77,8 @@ export default function PostDetail({
                         Pizarra táctica
                     </h2>
 
-                    <BoardStage
+                    <div className="overflow-x-auto">
+                      <BoardStage
                         boardType={board.boardType}
                         elements={board.elements}
                         tool="select"
@@ -83,7 +86,10 @@ export default function PostDetail({
                         setSelectedId={() => {}}
                         setElements={() => {}}
                         readOnly
-                    />
+                        width={650}
+                        height={400}
+                      />
+                    </div>
                 </div>
               )}
             </div>

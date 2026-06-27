@@ -9,7 +9,15 @@ import Card from "@/components/ui/Card"
 import TextArea from "@/components/ui/TextArea"
 import { getBoards } from "@/features/boards/services/getBoards"
 
-export default function PostForm() {
+type Props = {
+  onCancel?: () => void
+  onSuccess?: () => void
+}
+
+export default function PostForm({
+  onCancel,
+  onSuccess,
+}: Props) {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [boards, setBoards] = useState<any[]>([])
@@ -43,6 +51,8 @@ export default function PostForm() {
     setTitle("")
     setContent("")
     setBoardId("")
+
+    onSuccess?.()
   }
 
   return (
@@ -101,8 +111,12 @@ export default function PostForm() {
           </select>
         </div>
 
-        <Button fullWidth>
+        <Button>
           Crear publicación
+        </Button>
+
+        <Button variant="secondary" onClick={onCancel}>
+          Cancelar
         </Button>
       </form>
     </Card>
