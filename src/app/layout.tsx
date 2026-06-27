@@ -2,6 +2,7 @@ import "./globals.css"
 import { Inter, Montserrat } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import { Metadata } from "next";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,6 +32,12 @@ export default function RootLayout({
         <main className="max-w-6xl mx-auto px-4 py-6">
           {children}
         </main>
+
+        <Toaster
+          richColors
+          position="top-center"
+          duration={3000}
+        />
       </body>
     </html>
   )

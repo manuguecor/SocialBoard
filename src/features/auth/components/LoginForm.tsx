@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import Card from "@/components/ui/Card"
 import Input from "@/components/ui/Input"
 import Button from "@/components/ui/Button"
+import { toast } from "sonner"
 
 export default function LoginForm() {
   const [email, setEmail] = useState("")
@@ -20,10 +21,10 @@ export default function LoginForm() {
     try {
       const user = await loginUser(email, password)
       setUser(user)
-      alert("Login correcto")
+      toast.success("Bienvenido de nuevo.")
       router.push("/posts")
     } catch (error: any) {
-      alert(error.message)
+      toast.error("Usuario o contraseña incorrectos.")
     }
   }
 
@@ -44,7 +45,7 @@ export default function LoginForm() {
         >
           <Input
             type="email"
-            placeholder="Email"
+            placeholder="Correo electrónico"
             value={email}
             onChange={(e) =>
               setEmail(e.target.value)
