@@ -6,21 +6,40 @@ import { useRouter } from "next/navigation"
 import Card from "@/components/ui/Card"
 import Input from "@/components/ui/Input"
 import Button from "@/components/ui/Button"
+import { toast } from "sonner"
 
 export default function RegisterForm() {
   const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if(!username.trim()) {
+      return toast.warning("Introduce un nombre de usuario.")
+    }
+
+    if(!email.trim()) {
+      return toast.warning("Introduce un email.")
+    }
+
+    if(!password.trim() || !confirmPassword.trim()) {
+      return toast.warning("Introduce una contraseña.")
+    }
+
+    if(password !== confirmPassword) {
+      return toast.error("Las contraseñas no coinciden.")
+    }
+
     try {
-      await registerUser(email, password)
-      alert("Usuario creado correctamente")
-      router.push("/login")
+      await registerUser(email, password, username)
+      toast.success("Usuario creado correctamente")
+      router.push("/")
     } catch (error: any) {
-      alert(error.message)
+      toast.error(error.message)
     }
   }
 
@@ -39,6 +58,15 @@ export default function RegisterForm() {
           onSubmit={handleSubmit}
           className="space-y-4"
         >
+
+          <Input
+            placeholder="Nombre de usuario"
+            value={username}
+            onChange={(e) =>
+              setUsername(e.target.value)
+            }
+          />
+
           <Input
             type="email"
             placeholder="Email"
@@ -54,6 +82,15 @@ export default function RegisterForm() {
             value={password}
             onChange={(e) =>
               setPassword(e.target.value)
+            }
+          />
+
+          <Input
+            type="password"
+            placeholder="Confirmar contraseña"
+            value={confirmPassword}
+            onChange={(e) =>
+              setConfirmPassword(e.target.value)
             }
           />
 

@@ -8,6 +8,7 @@ import Input from "@/components/ui/Input"
 import Card from "@/components/ui/Card"
 import TextArea from "@/components/ui/TextArea"
 import { getBoards } from "@/features/boards/services/getBoards"
+import { getUserById } from "@/features/users/services/getUserById"
 
 type Props = {
   onCancel?: () => void
@@ -23,6 +24,7 @@ export default function PostForm({
   const [boards, setBoards] = useState<any[]>([])
   const [boardId, setBoardId] = useState("")
   const user = useAuthStore((state) => state.user)
+  
 
   useEffect(() => {
     if (!user) return
@@ -40,11 +42,14 @@ export default function PostForm({
 
     if (!user) return alert("Debes estar logueado")
 
+    const profile = await getUserById(user.uid)
+
+    if (!profile) return
+    
     await createPost({
       title,
       content,
       authorId: user.uid,
-      authorEmail: user.email,
       boardId: boardId || null,
     })
 

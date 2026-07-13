@@ -7,10 +7,11 @@ import {
 } from "firebase/firestore"
 
 import { db } from "@/lib/firebase"
+import { Comment } from "../types/Comment"
 
 export async function getCommentsByPost(
   postId: string
-) {
+) : Promise<Comment[]>{
   const q = query(
     collection(db, "comments"),
     where("postId", "==", postId),
@@ -21,6 +22,6 @@ export async function getCommentsByPost(
 
   return snapshot.docs.map((doc) => ({
     id: doc.id,
-    ...doc.data(),
+    ...(doc.data() as Omit<Comment, "id">),
   }))
 }

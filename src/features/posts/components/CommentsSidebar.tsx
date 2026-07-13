@@ -12,13 +12,16 @@ import { createComment } from "@/features/comments/services/createComment"
 
 import { getCommentsByPost } from "@/features/comments/services/getCommentsByPost"
 import Link from "next/link"
+import { getUserById } from "@/features/users/services/getUserById"
+import { UserProfile } from "@/features/users/types/UserProfile"
+import { Comment } from "@/features/comments/types/Comment"
 
 export default function CommentsSidebar({
   postId,
 }: {
   postId: string
 }) {
-  const [comments, setComments] = useState<any[]>([])
+  const [comments, setComments] = useState<(Comment & { author: UserProfile | null })[]>([])
   const [content, setContent] = useState("")
 
   const [replyingTo, setReplyingTo] =
@@ -29,10 +32,20 @@ export default function CommentsSidebar({
   )
 
   const loadComments = async () => {
-    const data =
-      await getCommentsByPost(postId)
+    const data = await getCommentsByPost(postId)
 
-    setComments(data)
+    const comments = await Promise.all(
+      data.map(async (comment) => {
+        const author = await getUserById(comment.userId)
+
+        return {
+          ...comment,
+          author,
+        }
+      })
+    )
+
+    setComments(comments)
   }
 
   useEffect(() => {
@@ -44,13 +57,13 @@ export default function CommentsSidebar({
   ) => {
     if (!user || !content) return
 
+    const profile = await getUserById(user.uid)
+
+    if(!profile) return
+ 
     await createComment({
       postId,
       userId: user.uid,
-      username:
-        user.displayName ||
-        user.email ||
-        "Usuario",
       content,
       parentCommentId,
     })
@@ -86,13 +99,31 @@ export default function CommentsSidebar({
           return (
             <div key={comment.id} className="border-b pb-5">
 
-              <p className="font-medium">
-                {comment.username}
-              </p>
+              <div className="flex items-start gap-3">
 
-              <p className="text-sm text-gray-600 mt-1">
-                {comment.content}
-              </p>
+                <img
+                  src={comment.author?.avatar || "/avatars/avatar1.png"}
+                  alt={comment.author?.displayName}
+                  className="w-10 h-10 rounded-full border object-cover"
+                />
+
+                <div className="flex-1">
+
+                  <p className="font-semibold">
+                    {comment.author?.displayName || comment.author?.username}
+                  </p>
+
+                  <p className="text-sm text-gray-500">
+                    @{comment.author?.username}
+                  </p>
+
+                  <p className="text-gray-700 mt-2">
+                    {comment.content}
+                  </p>
+
+                </div>
+
+              </div>
 
               {user && (
                 <Button
@@ -118,7 +149,7 @@ export default function CommentsSidebar({
                 {replies.map((reply) => (
                   <div key={reply.id} className="border-lborder-gray-200 pl-4 text-sm">
                     <p className="font-medium">
-                      {reply.username}
+                      {reply.author?.username}
                     </p>
 
                     <p className="text-gray-600 mt-1">

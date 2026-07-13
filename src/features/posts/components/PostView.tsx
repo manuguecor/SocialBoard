@@ -14,6 +14,7 @@ export default function PostView() {
   const [creating, setCreating] = useState(false)
   const user = useAuthStore((state) => state.user)
   const router = useRouter()
+  const [reload, setReload] = useState(0)
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -44,12 +45,15 @@ export default function PostView() {
         <div className="mb-8">
           <PostForm
             onCancel={() => setCreating(false)}
-            onSuccess={() => setCreating(false)}
+            onSuccess={() => {
+              setCreating(false)
+              setReload((r) => r + 1)
+            }}
           />
         </div>
       )}
 
-      <PostList />
+      <PostList key={reload}/>
     </div>
   )
 }
