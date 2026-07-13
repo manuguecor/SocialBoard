@@ -37,7 +37,7 @@ export default function RegisterForm() {
     try {
       await registerUser(email, password, username)
       toast.success("Usuario creado correctamente")
-      router.push("/login")
+      router.push("/")
     } catch (error: any) {
       toast.error(error.message)
     }

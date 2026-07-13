@@ -275,33 +275,19 @@ export default function BoardStage({
                 stroke="white"
                 strokeWidth={2}
               />
-
-              <Circle
-                x={BOARD.WIDTH / 2}
-                y={220}
-                radius={50}
-                stroke="white"
-                strokeWidth={2}
-              />
             </>
           )}
 
           {elements.map((element) => (
 
             <BoardElementRenderer
-
               key={element.id}
-
               element={element}
-
               tool={tool}
-
               selectedId={selectedId}
-
               setSelectedId={setSelectedId}
-
               onDrag={handleDrag}
-
+              readOnly={readOnly}
             />
 
           ))}
