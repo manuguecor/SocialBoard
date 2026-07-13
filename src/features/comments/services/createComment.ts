@@ -9,7 +9,6 @@ import { db } from "@/lib/firebase"
 interface CreateCommentProps {
   postId: string
   userId: string
-  username: string
   content: string
   parentCommentId?: string | null
 }
@@ -17,14 +16,12 @@ interface CreateCommentProps {
 export async function createComment({
   postId,
   userId,
-  username,
   content,
   parentCommentId
 }: CreateCommentProps) {
   await addDoc(collection(db, "comments"), {
     postId,
     userId,
-    username,
     content,
     parentCommentId: parentCommentId || null,
     createdAt: serverTimestamp(),

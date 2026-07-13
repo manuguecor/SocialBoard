@@ -19,7 +19,7 @@ export async function registerUser(email: string, password: string, username: st
     email: user.email,
     username,
     displayName: "",
-    avatar: "/avatars/default.png",
+    avatar: "/avatars/avatar1.png",
     bio: "",
     favouriteTeam: "",
     role: "user",

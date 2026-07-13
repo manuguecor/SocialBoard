@@ -11,19 +11,31 @@ import Link from "next/link"
 import Button from "@/components/ui/Button"
 import { getBoardById } from "@/features/boards/services/getBoardById"
 import BoardStage from "@/features/boards/components/BoardStage"
+import { Post } from "../types/Post"
+import { UserProfile } from "@/features/users/types/UserProfile"
+import { getUserById } from "@/features/users/services/getUserById"
 
 export default function PostDetail({
   postId,
 }: {
   postId: string
 }) {
-  const [post, setPost] = useState<any>(null)
+  const [post, setPost] = useState<Post & {author: UserProfile | null} | null>(null)
   const [board, setBoard] = useState<any>(null)
 
   useEffect(() => {
     const fetchPost = async () => {
       const data = await getPostById(postId)
-      setPost(data)
+      
+      if (!data) return
+
+      const author = await getUserById(data.authorId)
+
+      setPost({
+        ...data,
+        author,
+      })
+
 
       if (data?.boardId) {
           const boardData = await getBoardById(data.boardId)
@@ -56,18 +68,38 @@ export default function PostDetail({
               </Link>
             </div>
 
-            <div className="mb-6">
-            <p className="text-sm text-gray-500 mb-2">
-                {post.authorEmail}
-            </p>
+            <div className="mb-8">
 
-            <h1 className="text-4xl font-bold mb-4">
+              <div className="flex items-center gap-4 mb-6">
+
+                <img
+                  src={post.author?.avatar || "/avatars/avatar1.png"}
+                  alt={post.author?.displayName}
+                  className="w-14 h-14 rounded-full border object-cover"
+                />
+
+                <div>
+
+                  <p className="font-semibold text-lg">
+                    {post.author?.displayName || post.author?.username}
+                  </p>
+
+                  <p className="text-gray-500 text-sm">
+                    @{post.author?.username}
+                  </p>
+
+                </div>
+
+              </div>
+
+              <h1 className="text-4xl font-bold mb-4">
                 {post.title}
-            </h1>
+              </h1>
 
-            <p className="text-gray-700 leading-relaxed">
+              <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                 {post.content}
-            </p>
+              </p>
+
             </div>
 
             <div className="mt-8">

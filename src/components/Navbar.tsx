@@ -3,18 +3,37 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useAuthStore } from "@/store/authStore"
-import { logoutUser } from "@/features/auth/services/logout"
-import Button from "./ui/Button"
+import { useEffect, useState } from "react"
+import { getUserById } from "@/features/users/services/getUserById"
+import UserMenu from "@/features/users/components/UserMenu"
 
 export default function Navbar() {
   const pathname = usePathname()
   const user = useAuthStore((state) => state.user)
+
+  const [profile, setProfile] = useState<any>(null)
 
   const navLinks = [
     { href: "/", label: "Inicio" },
     { href: "/posts", label: "Publicaciones" },
     { href: "/boards", label: "Pizarras" },
   ]
+
+  const loadProfile = async() => {
+    const data = await getUserById(user!.uid)
+    setProfile(data)
+  }
+
+  useEffect(() => {
+
+      if (!user) {
+          setProfile(null)
+          return
+      }
+
+      loadProfile()
+
+  }, [user])
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -62,16 +81,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <span className="text-sm text-gray-500">
-                {user.email}
-              </span>
-
-              <Button
-                onClick={logoutUser}
-                variant="secondary"
-              >
-                Cerrar sesión
-              </Button>
+              <UserMenu />
             </>
           )}
         </div>
