@@ -1,36 +1,191 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SocialBoard
 
-## Getting Started
+SocialBoard es una aplicación web desarrollada como Trabajo Fin de Máster cuyo objetivo es combinar las funcionalidades de una red social con un editor de pizarras tácticas para facilitar el intercambio de conocimiento futbolístico entre entrenadores, jugadores y aficionados.
 
-First, run the development server:
+---
+
+## Características principales
+
+- Registro e inicio de sesión mediante Firebase Authentication.
+- Gestión de perfiles de usuario.
+- Edición del perfil.
+- Creación de publicaciones.
+- Asociación opcional de una pizarra táctica a cada publicación.
+- Editor gráfico interactivo de pizarras tácticas.
+- Comentarios y respuestas anidadas.
+- Persistencia de datos mediante Cloud Firestore.
+- Interfaz responsive desarrollada con Tailwind CSS.
+
+---
+
+## Tecnologías utilizadas
+
+| Tecnología | Versión |
+|------------|----------|
+| Node.js | >= 20.20.2 |
+| Next.js | 16.2.4 |
+| React | 19.2.4 |
+| TypeScript | >= 5 |
+| Firebase | >= 12.12.1 |
+| React Konva | 19.2.3 |
+| Tailwind CSS | 4.2.4 |
+| Zustand | 5.0.12 |
+| React Hook Form | 19.2.4 |
+
+---
+
+## Requisitos
+
+- Node.js 20 o superior
+- npm 10 o superior
+- Proyecto Firebase configurado
+
+---
+
+## Instalación
+
+Clonar el repositorio:
+
+```bash
+git clone https://github.com/manuguecor/SocialBoard.git
+
+cd socialboard
+```
+
+Instalar dependencias:
+
+```bash
+npm install
+```
+
+Iniciar el proyecto:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abrir:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Scripts disponibles
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Inicia el servidor de desarrollo.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run build
+```
 
-## Deploy on Vercel
+Genera la versión de producción.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run start
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ejecuta la aplicación en producción.
+
+---
+
+## Estructura del proyecto
+
+```
+src/
+│
+├── app/
+├── components/
+├── features/
+│   ├── auth/
+│   ├── boards/
+│   ├── comments/
+│   ├── posts/
+│   └── users/
+├── lib/
+├── store/
+└── types/
+```
+
+---
+
+## Funcionalidades
+
+### Autenticación
+
+- Registro de usuarios.
+- Inicio de sesión.
+- Cierre de sesión.
+- Gestión de sesión mediante Firebase Authentication.
+
+### Gestión de usuarios
+
+- Consulta del perfil.
+- Edición del perfil.
+- Cambio de avatar.
+- Actualización automática de publicaciones y comentarios tras modificar el perfil.
+
+### Publicaciones
+
+- Crear publicaciones.
+- Asociar una pizarra táctica.
+- Visualizar publicaciones.
+- Visualizar detalle.
+
+### Comentarios
+
+- Crear comentarios.
+- Responder comentarios.
+- Comentarios anidados.
+
+### Pizarras tácticas
+
+- Campo completo.
+- Medio campo.
+- Área.
+
+Elementos disponibles:
+
+- Jugadores azules.
+- Jugadores rojos.
+- Balón.
+- Flechas.
+- Líneas.
+
+---
+
+## Base de datos
+
+La aplicación utiliza Cloud Firestore.
+
+Colecciones principales:
+
+- users
+- posts
+- comments
+- boards
+
+---
+
+## Autor
+
+Manuel Guerra Cordón
+
+Trabajo Fin de Máster
+
+Máster Universitario en Diseño y Desarrollo de Interfaz de Usuario Web (Front-End Design and Development)
+
+Universidad Internacional de La Rioja (UNIR)
+
+Curso 2025-2026
+
+---
+
+## Licencia
+
+Este proyecto ha sido desarrollado con fines académicos como Trabajo Fin de Máster.
